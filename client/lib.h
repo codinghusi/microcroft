@@ -1,5 +1,8 @@
+#include <WiFi.h>
+#include <WiFiUdp.h>
 
-const int port = 6522;
+
+
 unsigned int lastResponse = 0;
 const unsigned int TIMEOUT = 5000; // milliseconds
 bool connected = false;
@@ -14,12 +17,30 @@ void connectToWifi( const char* ssid, const char* password ) {
   while ( WiFi.status() != WL_CONNECTED ) {}
 }
 
-void connectToServer() {
-  IPAddress broadcastIp = getBroadcastAddress( WiFi.subnetMask(), WiFi.localIP() );
-  Serial.print( "Broadcast IP: " );
-  Serial.println( broadcastIp );
+void connectToServer( int broadcastPort, int port ) {
+  WiFiUDP broadcastContact;
+  WiFiUDP broadcastReceiver;
 
-  if ( !client.connect( broadcastIp, port ) ) {
+  // calculating the broadcast address
+  IPAddress broadcastIp = getBroadcastAddress( WiFi.subnetMask(), WiFi.localIP() );
+
+  // scan for picroft
+  broadcastReceiver.begin( port );
+
+  Serial.println( "scanning ..." );
+  broadcastContact.beginPacket( broadcastIp, broadcastPort );
+  broadcastContact.write( "new microcroft" );
+  broadcastContact.endPacket();
+
+  Serial.println( "Waiting for response..." );  
+  broadcastReceiver.parsePacket(); // wait for response
+  // TODO: do something with the packet
+  broadcastContact.stop();
+  broadcastReceiver.stop();
+
+  // connect to picroft
+  IPAddress remoteAddress = broadcastReceiver.remoteIP();
+  while ( !client.connect( remoteAddress, port ) ) {
     Serial.print( "Failed to Connect. " );
     delay( 1000 );
     Serial.print( "Next try ..." );
