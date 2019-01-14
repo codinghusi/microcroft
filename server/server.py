@@ -1,6 +1,6 @@
 
 import socket
-import thread
+import threading
 
 port = 6522
 contactPort = 6523
@@ -35,7 +35,10 @@ def handleContactClients():
         print( "a microcroft scanned the network" )
         contactClient.sendto( "allright!", addr, normalPort )
 
-thread.start_new_thread( handleNormalClients, ( "normalClientsThread" ) )
-thread.start_new_thread( handleNormalClients, ( "contactClientsThread" ) )
+threading.Thread( target = handleNormalClients )
+threading.Thread( target = handleNormalClients )
 
 print( "started contact server!" )
+
+while True:
+        pass
