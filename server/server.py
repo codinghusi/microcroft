@@ -2,9 +2,11 @@
 import socket
 import threading
 
-port = 6522
+normalPort = 6522
 contactPort = 6523
 contactMessage = "new microcroft"
+
+running = True
 
 print( "starting normal server..." )
 
@@ -24,21 +26,26 @@ contactServer.bind( address )
 contactClient = socket.socket( socket.AF_INET, socket.SOCK_DGRAM )
 
 def handleNormalClients():
-    while True:
+    while running:
         print( "waiting for a connection" )
-        connection, client_address = sock.accept()
+        connection, client_address = normalServer.accept()
         print( "got a connection" )
 
 def handleContactClients():
-    while True:
-        data, addr = contactServer.recvfrom( len(contactMessage) )
+    while running:
+        print( "waiting for a scan" )
+        data, addr = contactServer.recvfrom( 1024 )
         print( "a microcroft scanned the network" )
-        contactClient.sendto( "allright!", addr, normalPort )
+        print(addr)
+        contactClient.sendto( "alright!".encode(), ( addr[0], normalPort ) )
 
-threading.Thread( target = handleNormalClients )
-threading.Thread( target = handleNormalClients )
+threadNormal = threading.Thread( target = handleNormalClients )
+threadContact = threading.Thread( target = handleContactClients )
+threadNormal.start()
+threadContact.start()
 
 print( "started contact server!" )
 
-while True:
-        pass
+input( "press any key to stop the server\n" )
+
+running = False

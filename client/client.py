@@ -4,19 +4,19 @@ import socket
 port = 6522
 contactPort = 6523
 contactMessage = "new microcroft"
+contactBackMessage = "alright!"
 
-print( "scanning network..." )
 
-scanClient = socket.socket( socket.AF_INET, socket.SOCK_STREAM )
-address = ( '192.168.178.255', 6523 )
-scanClient.sendto( "hello".encode(), address )
 
-print( "waiting for contact..." )
+scanClient = socket.socket( socket.AF_INET, socket.SOCK_DGRAM )
 
 contactServer = socket.socket( socket.AF_INET, socket.SOCK_DGRAM )
-address = ( '', 6522 )
-contactServer.bind( address )
+contactServer.bind( ( '', 6522 ) )
 
-data, addr = contactServer.recvfrom(1024)
+print( "scanning network..." )
+scanClient.sendto( "hello".encode(), ( '10.1.146.255', 6523 ) )
+
+print( "waiting for contact..." )
+data, addr = contactServer.recvfrom( 1024 )
 
 print( "found ip: ", addr )
