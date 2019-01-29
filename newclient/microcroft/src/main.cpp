@@ -2,8 +2,8 @@
 #include "../include/lib.h"
 
 // custom config
-const char* networkSSID = "ITA";
-const char* networkPassword = "Pruefung2018";
+const char* networkSSID = "TSST-SN-B";
+const char* networkPassword = "123456789";
 
 
 
