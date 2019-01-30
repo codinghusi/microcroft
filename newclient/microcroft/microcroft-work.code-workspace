@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "/home/noah/microcroft"
+		},
+		{
+			"path": ".",
+			"name": "microcroft"
+		}
+	],
+	"settings": {
+		"terminal.integrated.env.linux": {
+			"PATH": "/home/noah/.platformio/penv/bin:/home/noah/.platformio/penv:/usr/local/bin:/usr/bin:/bin",
+			"PLATFORMIO_CALLER": "vscode"
+		}
+	}
+}
